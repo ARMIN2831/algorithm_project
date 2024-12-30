@@ -1,0 +1,7 @@
+Searching for: 2
+Time taken: 0 seconds
+Search method: 2
+----------------------------------------
+Searching for: armin
+Time taken: 0.0053472 seconds
+Search method: 1
