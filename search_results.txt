@@ -1,19 +1,6 @@
 Searching for: armin
-Time taken: 0.0000039000 seconds
-Search method: 2
-----------------------------------------
-Searching for: mitra
-Time taken: 0.0000058000 seconds
-Search method: 2
-----------------------------------------
-Searching for: slama
-Time taken: 0.0000036000 seconds
-Search method: 2
-----------------------------------------
-Searching for: ieffe
-Time taken: 0.0000014000 seconds
+Time taken: 0.0000035000 seconds
 Search method: 4
-----------------------------------------
-Searching for: ieffe
-Time taken: 0.0000017000 seconds
-Search method: 3
+filter Size: 3866181
+Hash functions: 6
+False Positive Rate: 101
