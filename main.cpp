@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <unordered_map>
 #include <algorithm>
 #include <chrono>
 #include <fstream>
@@ -41,6 +42,20 @@ void binarySearch(const vector<string>& sortedDb, const string& username) {
     TimeTaken = duration.count(); // Time in seconds
 }
 
+void hashSearch(const unordered_map<string, bool>& hashMap, const string& username) {
+    auto start = chrono::steady_clock::now(); // Start time
+    bool ch = hashMap.find(username) != hashMap.end();
+    auto end = chrono::steady_clock::now(); // End time
+    if (ch) {
+        cout << "Username found (Hash Search).\n";
+    } else {
+        cout << "Username not found (Hash Search).\n";
+    }
+    chrono::duration<double> duration = end - start;
+    cout << "Time taken: " << duration.count() << " seconds.\n";
+    TimeTaken = duration.count(); // Time in seconds
+}
+
 void loadUsernamesFromFile(vector<string>& database) {
     ifstream file("usernames.txt");
     string username;
@@ -54,9 +69,14 @@ int main() {
     vector<string> database;
     loadUsernamesFromFile(database); // Load usernames from file
     vector<string> sortedDatabase = database; // Sorted version for binary search
-
+    unordered_map<string, bool> hashMap;      // Hash map for hash search
 
     sort(sortedDatabase.begin(), sortedDatabase.end());
+
+    // Fill hash map
+    for (const auto& user : database) {
+        hashMap[user] = true;
+    }
 
     // Save results to file
     ofstream resultFile("search_results.txt");
@@ -81,6 +101,9 @@ int main() {
                 break;
             case 2:
                 binarySearch(sortedDatabase, username);
+                break;
+            case 3:
+                hashSearch(hashMap, username);
                 break;
             default:
                 cout << "Invalid choice.\n";

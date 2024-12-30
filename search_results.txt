@@ -1,7 +1,7 @@
 Searching for: armin
-Time taken: 5.8e-06 seconds
-Search method: 2
+Time taken: 3.6e-06 seconds
+Search method: 3
 ----------------------------------------
 Searching for: test
-Time taken: 2.8e-06 seconds
-Search method: 2
+Time taken: 3e-06 seconds
+Search method: 3
