@@ -30,6 +30,36 @@ int hash2(const string& key) {
     return hash;
 }
 
+void binarySearch(const vector<string>& sortedDb, const string& username) {
+    auto start = chrono::steady_clock::now(); // Start time
+    int left = 0;
+    int right = sortedDb.size() - 1;
+    bool found = false;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (sortedDb[mid] == username) {
+            found = true;
+            break;
+        }
+        if (sortedDb[mid] < username) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    auto end = chrono::steady_clock::now(); // End time
+    if (found) {
+        cout << "Username found (Binary Search).\n";
+    } else {
+        cout << "Username not found (Binary Search).\n";
+    }
+    chrono::duration<double> duration = end - start;
+    cout << "Time taken: " << fixed << setprecision(10) << duration.count() << " seconds.\n";
+    TimeTaken = duration.count(); // Time in seconds
+}
+
 void linearSearch(const vector<string>& db, const string& username) {
     auto start = chrono::steady_clock::now(); // Start time
     for (const auto& user : db) {
@@ -44,20 +74,6 @@ void linearSearch(const vector<string>& db, const string& username) {
     }
     auto end = chrono::steady_clock::now(); // End time after loop
     cout << "Username not found (Linear Search).\n";
-    chrono::duration<double> duration = end - start;
-    cout << "Time taken: " << fixed << setprecision(10) << duration.count() << " seconds.\n";
-    TimeTaken = duration.count(); // Time in seconds
-}
-
-void binarySearch(const vector<string>& sortedDb, const string& username) {
-    auto start = chrono::steady_clock::now(); // Start time
-    bool ch = binary_search(sortedDb.begin(), sortedDb.end(), username);
-    auto end = chrono::steady_clock::now(); // End time
-    if (ch) {
-        cout << "Username found (Binary Search).\n";
-    } else {
-        cout << "Username not found (Binary Search).\n";
-    }
     chrono::duration<double> duration = end - start;
     cout << "Time taken: " << fixed << setprecision(10) << duration.count() << " seconds.\n";
     TimeTaken = duration.count(); // Time in seconds
@@ -115,19 +131,16 @@ void generateRandomUsernamesFromFile(const vector<string>& database, int count, 
 
     ofstream timeFile("execution_times.csv", ios::app);
     for (const auto& username : randomUsernames) {
-        // جستجوی خطی
+        
         linearSearch(database, username);
         timeFile << username << "," << database.size() << "," << TimeTaken << "," << "Linear Search" << endl;
 
-        // جستجوی دودویی
         binarySearch(sortedDatabase, username);
         timeFile << username << "," << database.size() << "," << TimeTaken << "," << "Binary Search" << endl;
 
-        // جستجوی هش
         hashSearch(hashMap, username);
         timeFile << username << "," << database.size() << "," << TimeTaken << "," << "Hash Search" << endl;
 
-        // جستجوی فیلتر بلوم
         bloomFilterSearch(username);
         timeFile << username << "," << database.size() << "," << TimeTaken << "," << "Bloom Filter Search" << endl;
     }
