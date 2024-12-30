@@ -3,11 +3,30 @@
 #include <string>
 #include <unordered_map>
 #include <algorithm>
+#include <bitset>
 #include <chrono>
 #include <fstream>
 using namespace std;
 
+const int BLOOM_FILTER_SIZE = 4000000;
 float TimeTaken;
+bitset<BLOOM_FILTER_SIZE> bloomFilter;
+
+int hash1(const string& key) {
+    int hash = 0;
+    for (char c : key) {
+        hash = (hash * 31 + c) % BLOOM_FILTER_SIZE;
+    }
+    return hash;
+}
+
+int hash2(const string& key) {
+    int hash = 0;
+    for (char c : key) {
+        hash = (hash * 17 + c) % BLOOM_FILTER_SIZE;
+    }
+    return hash;
+}
 
 void linearSearch(const vector<string>& db, const string& username) {
     auto start = chrono::steady_clock::now(); // Start time
@@ -56,6 +75,22 @@ void hashSearch(const unordered_map<string, bool>& hashMap, const string& userna
     TimeTaken = duration.count(); // Time in seconds
 }
 
+void bloomFilterSearch(const string& username) {
+    auto start = chrono::steady_clock::now(); // Start time
+    int h1 = hash1(username);
+    int h2 = hash2(username);
+    bool ch = bloomFilter[h1] && bloomFilter[h2];
+    auto end = chrono::steady_clock::now(); // End time
+    if (ch) {
+        cout << "Username might be in the database (Bloom Filter Search).\n";
+    } else {
+        cout << "Username definitely not in the database (Bloom Filter Search).\n";
+    }
+    chrono::duration<double> duration = end - start;
+    cout << "Time taken: " << duration.count() << " seconds.\n";
+    TimeTaken = duration.count(); // Time in seconds
+}
+
 void loadUsernamesFromFile(vector<string>& database) {
     ifstream file("usernames.txt");
     string username;
@@ -76,6 +111,14 @@ int main() {
     // Fill hash map
     for (const auto& user : database) {
         hashMap[user] = true;
+    }
+
+    // Fill bloom filter
+    for (const auto& user : database) {
+        int h1 = hash1(user);
+        int h2 = hash2(user);
+        bloomFilter[h1] = true;
+        bloomFilter[h2] = true;
     }
 
     // Save results to file
@@ -104,6 +147,9 @@ int main() {
                 break;
             case 3:
                 hashSearch(hashMap, username);
+                break;
+            case 4:
+                bloomFilterSearch(username);
                 break;
             default:
                 cout << "Invalid choice.\n";
