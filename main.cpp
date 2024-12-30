@@ -6,6 +6,7 @@
 #include <bitset>
 #include <chrono>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 
 const int BLOOM_FILTER_SIZE = 4000000;
@@ -35,7 +36,7 @@ void linearSearch(const vector<string>& db, const string& username) {
             auto end = chrono::steady_clock::now(); // End time
             cout << "Username found (Linear Search).\n";
             chrono::duration<double> duration = end - start;
-            cout << "Time taken: " << duration.count() << " seconds.\n";
+            cout << "Time taken: " << fixed << setprecision(10) << duration.count() << " seconds.\n";
             TimeTaken = duration.count(); // Time in seconds
             return;
         }
@@ -43,7 +44,7 @@ void linearSearch(const vector<string>& db, const string& username) {
     auto end = chrono::steady_clock::now(); // End time after loop
     cout << "Username not found (Linear Search).\n";
     chrono::duration<double> duration = end - start;
-    cout << "Time taken: " << duration.count() << " seconds.\n";
+    cout << "Time taken: " << fixed << setprecision(10) << duration.count() << " seconds.\n";
     TimeTaken = duration.count(); // Time in seconds
 }
 
@@ -57,7 +58,7 @@ void binarySearch(const vector<string>& sortedDb, const string& username) {
         cout << "Username not found (Binary Search).\n";
     }
     chrono::duration<double> duration = end - start;
-    cout << "Time taken: " << duration.count() << " seconds.\n";
+    cout << "Time taken: " << fixed << setprecision(10) << duration.count() << " seconds.\n";
     TimeTaken = duration.count(); // Time in seconds
 }
 
@@ -71,7 +72,7 @@ void hashSearch(const unordered_map<string, bool>& hashMap, const string& userna
         cout << "Username not found (Hash Search).\n";
     }
     chrono::duration<double> duration = end - start;
-    cout << "Time taken: " << duration.count() << " seconds.\n";
+    cout << "Time taken: " << fixed << setprecision(10) << duration.count() << " seconds.\n";
     TimeTaken = duration.count(); // Time in seconds
 }
 
@@ -87,7 +88,7 @@ void bloomFilterSearch(const string& username) {
         cout << "Username definitely not in the database (Bloom Filter Search).\n";
     }
     chrono::duration<double> duration = end - start;
-    cout << "Time taken: " << duration.count() << " seconds.\n";
+    cout << "Time taken: " << fixed << setprecision(10) << duration.count() << " seconds.\n";
     TimeTaken = duration.count(); // Time in seconds
 }
 
@@ -156,7 +157,10 @@ int main() {
                 break;
         }
 
-        resultFile << "Searching for: " << username << endl << "Time taken: " << TimeTaken << " seconds" << endl << "Search method: " << choice << endl; // Save search details to file
+        resultFile << "Searching for: " << username << endl
+           << "Time taken: " << fixed << setprecision(10) << TimeTaken << " seconds" << endl
+           << "Search method: " << choice << endl; // Save search details to file
+           
         resultFile << "----------------------------------------\n"; // Separator
         cout << "----------------------------------------\n";
     }
