@@ -7,6 +7,7 @@
 #include <chrono>
 #include <fstream>
 #include <iomanip>
+#include <random>
 using namespace std;
 
 const int BLOOM_FILTER_SIZE = 4000000;
@@ -101,6 +102,40 @@ void loadUsernamesFromFile(vector<string>& database) {
     file.close();
 }
 
+void generateRandomUsernamesFromFile(const vector<string>& database, int count, const vector<string>& sortedDatabase, const unordered_map<string, bool>& hashMap) {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dis(0, database.size() - 1);
+    vector<string> randomUsernames;
+
+    for (int i = 0; i < count; ++i) {
+        int index = dis(gen);
+        randomUsernames.push_back(database[index]);
+    }
+
+    ofstream timeFile("execution_times.csv", ios::app);
+    for (const auto& username : randomUsernames) {
+        // جستجوی خطی
+        linearSearch(database, username);
+        timeFile << username << "," << database.size() << "," << TimeTaken << "," << "Linear Search" << endl;
+
+        // جستجوی دودویی
+        binarySearch(sortedDatabase, username);
+        timeFile << username << "," << database.size() << "," << TimeTaken << "," << "Binary Search" << endl;
+
+        // جستجوی هش
+        hashSearch(hashMap, username);
+        timeFile << username << "," << database.size() << "," << TimeTaken << "," << "Hash Search" << endl;
+
+        // جستجوی فیلتر بلوم
+        bloomFilterSearch(username);
+        timeFile << username << "," << database.size() << "," << TimeTaken << "," << "Bloom Filter Search" << endl;
+    }
+    timeFile.close();
+
+    cout << "Search results for 10000 random usernames have been saved to 'execution_times.csv'.\n";
+}
+
 int main() {
     vector<string> database;
     loadUsernamesFromFile(database); // Load usernames from file
@@ -124,7 +159,6 @@ int main() {
 
     // Save results to file
     ofstream resultFile("search_results.txt");
-
     while (true) {
         int choice;
         string username;
@@ -137,6 +171,7 @@ int main() {
         cout << "2. Binary Search\n";
         cout << "3. Hash Search\n";
         cout << "4. Bloom Filter Search\n";
+        cout << "5. make 10000 random username for all methods\n";
         cin >> choice;
 
         switch (choice) {
@@ -151,6 +186,9 @@ int main() {
                 break;
             case 4:
                 bloomFilterSearch(username);
+                break;
+            case 5:
+                generateRandomUsernamesFromFile(database, 10000, sortedDatabase, hashMap);
                 break;
             default:
                 cout << "Invalid choice.\n";

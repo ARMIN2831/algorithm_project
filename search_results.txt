@@ -1,11 +1,3 @@
 Searching for: armin
-Time taken: 0.0000707000 seconds
-Search method: 4
-----------------------------------------
-Searching for: remanufacturing
-Time taken: 0.0000017000 seconds
-Search method: 4
-----------------------------------------
-Searching for: healers
-Time taken: 0.0000015000 seconds
-Search method: 4
+Time taken: 0.0000019000 seconds
+Search method: 5
