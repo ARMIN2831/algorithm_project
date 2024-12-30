@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include <algorithm>
 #include <chrono>
 #include <fstream>
 using namespace std;
@@ -25,6 +27,20 @@ void linearSearch(const vector<string>& db, const string& username) {
     TimeTaken = duration.count(); // Time in seconds
 }
 
+void binarySearch(const vector<string>& sortedDb, const string& username) {
+    auto start = chrono::steady_clock::now(); // Start time
+    bool ch = binary_search(sortedDb.begin(), sortedDb.end(), username);
+    auto end = chrono::steady_clock::now(); // End time
+    if (ch) {
+        cout << "Username found (Binary Search).\n";
+    } else {
+        cout << "Username not found (Binary Search).\n";
+    }
+    chrono::duration<double> duration = end - start;
+    cout << "Time taken: " << duration.count() << " seconds.\n";
+    TimeTaken = duration.count(); // Time in seconds
+}
+
 void loadUsernamesFromFile(vector<string>& database) {
     ifstream file("usernames.txt");
     string username;
@@ -36,7 +52,11 @@ void loadUsernamesFromFile(vector<string>& database) {
 
 int main() {
     vector<string> database;
-    loadUsernamesFromFile(database);
+    loadUsernamesFromFile(database); // Load usernames from file
+    vector<string> sortedDatabase = database; // Sorted version for binary search
+
+
+    sort(sortedDatabase.begin(), sortedDatabase.end());
 
     // Save results to file
     ofstream resultFile("search_results.txt");
@@ -58,6 +78,9 @@ int main() {
         switch (choice) {
             case 1:
                 linearSearch(database, username);
+                break;
+            case 2:
+                binarySearch(sortedDatabase, username);
                 break;
             default:
                 cout << "Invalid choice.\n";
